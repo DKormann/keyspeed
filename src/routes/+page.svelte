@@ -176,7 +176,7 @@
 
     function start_game(){
 
-        date = new Date().getFullYear() + "-" + new Date().getMonth() + "-" + new Date().getDate()
+        date = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate()
         if (localStorage.last_used != date){
             localStorage.last_used = date
             localStorage.level = 1

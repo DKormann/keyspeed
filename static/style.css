@@ -1,0 +1,55 @@
+
+body{
+    background-color: #123;
+
+    --color: #def;
+
+    color:var(--color);
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+#page{
+
+    font:auto;
+    text-align: center;
+
+    margin: 10vh;
+    margin-top:10vh;
+
+}
+
+
+.new{
+    color:#556;
+}
+
+.new.done{
+
+    color: #0f0;
+}
+
+.hunter{
+    color: blue;
+    animation: colorTransition 1s linear forwards;
+}
+
+.level{
+    margin-bottom: 10vh;
+}
+
+.new.hunter {
+    color: red;
+    animation: colorTransition 3s linear forwards;
+}
+  
+@keyframes colorTransition {
+    from {
+        color: red;
+    }
+
+    to {
+        color: transparent;
+        transform: translate(100vw, 0);
+    }
+}

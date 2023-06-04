@@ -24,6 +24,8 @@
         }
         if (localStorage.history){
             history = JSON.parse(localStorage.history)
+        }else{
+            history = [[get_date(), 1]]
         }
     }
 
@@ -174,7 +176,11 @@
     var typed_count = 0
     var start_time = Date.now()
 
-    var date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
+    
+    function get_date () { return new Date().getFullYear() + "." + (new Date().getMonth() + 1) + "." + new Date().getDate()+"."}
+
+    var date = get_date()
+
 
 
     if (browser) {
@@ -187,7 +193,7 @@
 
     function start_game(){
 
-        date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
+        date = get_date()
         if (localStorage.last_used != date){
             localStorage.last_used = date
             localStorage.level = 1
@@ -256,17 +262,18 @@
     </h2>
 
 
-    {#if !hunt_started}
+    {#if !hunt_started }
         <div id = stats>
 
             <h2>stats:</h2>
             <p>highscore: {highscore}</p>
 
+            {#if history.length > 1}
 
-            <!-- loop backwards -->
-            {#each history.slice().reverse() as item}
+                {#each history.slice().reverse() as item}
                 <p>{item[0]} : {item[1]}</p>
-            {/each}
+                {/each}
+            {/if}
 
         </div>
     {/if}

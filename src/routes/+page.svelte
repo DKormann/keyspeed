@@ -172,9 +172,6 @@
     var typed_count = 0
     var start_time = Date.now()
 
-
-
-
     var date = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate()
 
     function start_game(){

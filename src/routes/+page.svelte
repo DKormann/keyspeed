@@ -11,7 +11,7 @@
 
     var highscore = 1
 
-    var history = new Map<string,number>()
+    var history: [string, number][] = []
 
     if (browser){
 
@@ -23,9 +23,10 @@
             highscore = parseInt(localStorage.highscore)
         }
         if (localStorage.history){
-            history = new Map(JSON.parse(localStorage.history))
+            history = JSON.parse(localStorage.history)
         }
     }
+
 
     var gameover_msg = ""
 
@@ -67,9 +68,10 @@
                 highscore = level
                 localStorage.highscore = highscore
 
-                history.set(date,highscore)
-                localStorage.history = JSON.stringify(Array.from(history))
+                localStorage.history = JSON.stringify(history)
             }
+            history[history.length - 1] = [date, level]
+
             localStorage.level = level
             return
         }
@@ -172,11 +174,20 @@
     var typed_count = 0
     var start_time = Date.now()
 
-    var date = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate()
+    var date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
+
+
+    if (browser) {
+        if (history[history.length - 1][0] != date){
+            history.push([date, level])
+            console.log(history);
+            
+        }
+    }
 
     function start_game(){
 
-        date = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate()
+        date = new Date().getFullYear() + "-" + (new Date().getMonth() + 1) + "-" + new Date().getDate()
         if (localStorage.last_used != date){
             localStorage.last_used = date
             localStorage.level = 1
@@ -251,7 +262,9 @@
             <h2>stats:</h2>
             <p>highscore: {highscore}</p>
 
-            {#each Array.from(history) as item}
+
+            <!-- loop backwards -->
+            {#each history.slice().reverse() as item}
                 <p>{item[0]} : {item[1]}</p>
             {/each}
 

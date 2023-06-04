@@ -19,6 +19,11 @@ body{
 
 }
 
+#stats{
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+}
+
 
 .new{
     color:#556;

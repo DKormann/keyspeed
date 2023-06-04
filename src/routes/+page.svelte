@@ -2,10 +2,30 @@
 
     import { onMount, tick } from "svelte";
     import eng_list from "./eng_list.json"
+    import { browser } from "$app/environment";
 
     var content:string[] = []
-    var content_size = 20
+    var content_per_level = 10
+    var content_size = content_per_level
     var level = 1
+
+    var highscore = 1
+
+    var history = new Map<string,number>()
+
+    if (browser){
+
+        if(localStorage.level){
+            level = parseInt(localStorage.level)
+            content_size = level * content_per_level
+        }
+        if (localStorage.highscore){
+            highscore = parseInt(localStorage.highscore)
+        }
+        if (localStorage.history){
+            history = new Map(JSON.parse(localStorage.history))
+        }
+    }
 
     var gameover_msg = ""
 
@@ -39,10 +59,18 @@
         
         typed_count += 1
         if (typed_count>= letter_count){
-            content_size += 10
+            content_size += content_per_level
             content = []
             end_game("WIN")
             level += 1
+            if (level > highscore){
+                highscore = level
+                localStorage.highscore = highscore
+
+                history.set(date,highscore)
+                localStorage.history = JSON.stringify(Array.from(history))
+            }
+            localStorage.level = level
             return
         }
 
@@ -69,7 +97,12 @@
     var hunted_words = 0
     var hunted_letters = 0
 
+
     function start_hunt(){
+
+        // get the current date
+
+        start_time = Date.now()
         
         hunt_started = true
         
@@ -85,7 +118,6 @@
         if (!hunt_started || content.length == 0){
             return
         }
-        console.log("hunt");
 
         const letter = document.getElementById("L"+hunted_words+"_"+hunted_letters)
         if (letter != null){
@@ -141,10 +173,21 @@
     var start_time = Date.now()
 
 
-    
+
+
+    var date = new Date().getFullYear() + "-" + new Date().getMonth() + 1 + "-" + new Date().getDate()
 
     function start_game(){
-        start_time = Date.now()
+
+        date = new Date().getFullYear() + "-" + new Date().getMonth() + "-" + new Date().getDate()
+        if (localStorage.last_used != date){
+            localStorage.last_used = date
+            localStorage.level = 1
+
+            level = 1
+            content_size = 20
+        }
+        
         game_started = true
 
         typed_word_count = 0
@@ -161,7 +204,7 @@
             return
         }
         letter_count = 0
-
+        
         while(letter_count < content_size){
             const new_word = get_word()
             content.push(new_word)
@@ -203,5 +246,19 @@
         {/if}
 
     </h2>
+
+
+    {#if !hunt_started}
+        <div id = stats>
+
+            <h2>stats:</h2>
+            <p>highscore: {highscore}</p>
+
+            {#each Array.from(history) as item}
+                <p>{item[0]} : {item[1]}</p>
+            {/each}
+
+        </div>
+    {/if}
 
 </div>

@@ -97,6 +97,7 @@
             content = []
             end_game("WIN")
             level += 1
+
             if (level > highscore){
                 highscore = level
                 localStorage.highscore = highscore
@@ -125,9 +126,6 @@
     function start_hunt(){
 
         caret.style.display = "block"
-
-
-        // get the current date
 
         start_time = Date.now()
         
@@ -205,17 +203,14 @@
 
     var date = get_date()
 
-
-
     if (browser) {
         if (history[history.length - 1][0] != date){
             history.push([date, level])
-            console.log(history);
+
         }
     }
 
     function start_game(){
-
 
         date = get_date()
         if (localStorage.last_used != date){
@@ -242,19 +237,43 @@
             return
         }
         letter_count = 0
+
+        set_random_state(date+level)
         
         while(letter_count < content_size){
-            const new_word = get_word()
+            const new_word = get_word(date+level+letter_count)
             content.push(new_word)
             letter_count += new_word.length + 1
         }
         letter_count -= 1
     }
 
-    function get_word(){
+    const salt = 2**32 *0.34857344
+    var random_state = salt
+
+    function set_random_state(seed:string){
+        random_state = salt
+        random(seed)
+    }
+
+    function random(seed = "sdfj0"){
+
+        for (let i = 0; i < seed.length; i++) {
+            const char = seed.charCodeAt(i);
+            random_state = ((random_state << 5) - random_state) + char;
+            random_state = random_state & random_state; // Convert to 32-bit integer
+        }
+
+        const randomNumber = Math.abs(random_state) / Math.pow(2, 32); // Divide by 2^32 to get a floating-point number between 0 and 1
+
+        return randomNumber;
+    }
+
+    function get_word(seed:string){
 
         const exp = 1000
-        var idx = (exp ** Math.random()-1)/(exp-1)
+
+        var idx = (exp ** random(seed)-1)/(exp-1)
 
         idx = Math.floor(idx* eng_list.length)
         const word = eng_list[idx]

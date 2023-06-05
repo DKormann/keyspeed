@@ -13,6 +13,8 @@
 
     var history: [string, number][] = []
 
+
+    var caret:HTMLElement
     if (browser){
 
         if(localStorage.level){
@@ -27,6 +29,9 @@
         }else{
             history = [[get_date(), 1]]
         }
+
+        caret = document.getElementById("caret")!
+
     }
 
 
@@ -47,6 +52,7 @@
 
     var hunt_started = false
 
+
     function type(key:string){
 
         if (!game_started){
@@ -59,7 +65,32 @@
         if (content.length == 0){
             return
         }
+
+        const target_character = typed_letter_count==-1 ? " " : content[typed_word_count][typed_letter_count]
+
+        const letter = document.getElementById("L"+typed_word_count+"_"+typed_letter_count)
+
+
+        if ( letter!= null){
+
+            caret.style.left = letter!.offsetLeft + letter.offsetWidth - 2 + "px"
+            caret.style.top = letter!.offsetTop + 4 + "px"
+        }else{
+            var newleft =  Number(caret.style.left.slice(0,-2))
+            caret.style.left = newleft + 4 + "px"
+        }
+            
         
+        if (target_character == key){
+
+            const letter = document.getElementById("L"+typed_word_count+"_"+(typed_letter_count))
+            letter?.classList.add("done")
+            
+        }else{
+            end_game()
+            return
+        }
+
         typed_count += 1
         if (typed_count>= letter_count){
             content_size += content_per_level
@@ -78,18 +109,6 @@
             return
         }
 
-        const target_character = typed_letter_count==-1 ? " " : content[typed_word_count][typed_letter_count]
-        
-        if (target_character == key){
-
-            const letter = document.getElementById("L"+typed_word_count+"_"+(typed_letter_count))
-            letter?.classList.add("done")
-            
-        }else{
-            end_game()
-            return
-        }
-
         typed_letter_count += 1
 
         if (typed_letter_count == content[typed_word_count].length){
@@ -98,11 +117,15 @@
         }
     }
 
+
     var hunted_words = 0
     var hunted_letters = 0
 
 
     function start_hunt(){
+
+        caret.style.display = "block"
+
 
         // get the current date
 
@@ -157,6 +180,7 @@
     var old_content : string[] = []
 
     function end_game(msg:string = "ERROR"){
+        caret.style.display = "none"
         game_started = false
 
         old_content = content
@@ -191,6 +215,7 @@
     }
 
     function start_game(){
+
 
         date = get_date()
         if (localStorage.last_used != date){
@@ -238,6 +263,9 @@
 
 </script>
 
+
+<!-- 10px width div -->
+
 <div id=page>
 
     <h2 class = level>Level {level}</h2>
@@ -245,6 +273,8 @@
     <!-- {steps}/{content_size} -->
     {typed_count}/{letter_count}
     <h2> 
+        <div  id ="caret" style="height:1em;width:3px;background:white;position:absolute;display:none"> </div>
+
         {#if gameover_msg != ""}
         <span class="hunter">
             {gameover_msg}

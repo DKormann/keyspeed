@@ -70,9 +70,9 @@
                 highscore = level
                 localStorage.highscore = highscore
 
-                localStorage.history = JSON.stringify(history)
             }
             history[history.length - 1] = [date, level]
+            localStorage.history = JSON.stringify(history)
 
             localStorage.level = level
             return
@@ -177,7 +177,7 @@
     var start_time = Date.now()
 
     
-    function get_date () { return new Date().getFullYear() + "." + (new Date().getMonth() + 1) + "." + new Date().getDate()+"."}
+    function get_date () { return new Date().getDate() + "." + (new Date().getMonth() + 1) + "." + new Date().getFullYear()+"."}
 
     var date = get_date()
 
@@ -187,7 +187,6 @@
         if (history[history.length - 1][0] != date){
             history.push([date, level])
             console.log(history);
-            
         }
     }
 

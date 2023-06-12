@@ -47,6 +47,11 @@ body{
     color: red;
     animation: colorTransition 3s linear forwards;
 }
+.wrong{
+
+    color:red;
+    text-decoration: .1em red underline;
+}
   
 @keyframes colorTransition {
     from {

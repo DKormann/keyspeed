@@ -5,6 +5,7 @@
     import { browser } from "$app/environment";
 
     import {data} from "./mobydick/en"
+    import { postData, setup_util } from "./util";
 
     var content:string[] = []
     var content_per_level = 10
@@ -12,10 +13,10 @@
     var level = 1
 
     var highscore = 1
-
     var history: [string, number][] = []
-
     var caret:HTMLElement
+
+    var userdata:string[] = []
 
     var alt_pressed = false
 
@@ -45,11 +46,26 @@
 
     function register_event(type:string){
         const now = time()
-        console.log(now - last_event_time + type);
+
+        var delta = now - last_event_time
+        if (Number.isNaN(delta)){
+            delta= 1000
+            last_event_time = time()
+        }
+
+        if (delta < 0){
+            delta = 0
+        }
+        
+
+        userdata.push(delta + type)
+
         last_event_time = now
     }
 
     onMount(()=>{
+
+        setup_util()
 
         window.addEventListener("keydown", (e)=>{
 
@@ -174,7 +190,7 @@
             
             typed_count -= n
             for (let i = 0; i < n; i++) {
-                register_event("_D_")
+                register_event("_X")
             }
     }
 
@@ -279,9 +295,13 @@
 
     var huntid:number | null = null
 
-    function time  (){ return Date.now() - start_time}
+    function time  (){ return  Date.now() - start_time}
+
+    var hunted_count = 0
+
 
     function hunt(){
+
         
         if (!hunt_started || content.length == 0){
             return
@@ -307,6 +327,7 @@
         }, interval);
 
         hunted_letters += 1
+        hunted_count += 1
         try{
 
             if (hunted_letters == content[hunted_words].length){
@@ -321,6 +342,26 @@
     var old_content : string[] = []
 
     function end_game(msg:string = "ERROR"){
+
+
+        if (msg == "BURNED"){
+
+            const err_size = typed_count - hunted_count
+
+            console.log("burned:",err_size);
+
+            for (let i = 0; i < err_size; i++) {
+                register_event("_D_Backspace")
+                register_delete()
+                register_event("_U_Backspace")
+            }
+        }
+
+        console.log(userdata.slice(-20).join("\n"));
+
+        postData(userdata)
+        
+
         caret.style.display = "none"
         game_started = false
 
@@ -341,6 +382,9 @@
     var typed_count = 0
     var start_time = Date.now()
 
+    console.log({start_time});
+    
+    
     
     function get_date () { return new Date().getDate() + "." + (new Date().getMonth() + 1) + "." + new Date().getFullYear()+"."}
 
@@ -373,19 +417,14 @@
 
         hunted_words = 0
         hunted_letters = 0
+        hunted_count = 0
 
         content = []
-        if (old_content.length > 0){
-            content = old_content
-            old_content = []
-            return
-        }
-        letter_count = 0
 
-        set_random_state(date+level)
+        letter_count = 0
         
         while(letter_count < content_size){
-            // const new_word = get_random_word(date+level+letter_count)
+
             const new_word = get_word()
             content.push(new_word)
             letter_count += new_word.length + 1
@@ -430,6 +469,10 @@
 
 
     function get_word(){
+
+
+        // return "\"Grand\""
+        
 
         if (data_word_num >= data_line.length){
 

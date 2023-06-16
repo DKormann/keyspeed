@@ -468,7 +468,6 @@
         game_started = true
         
 
-        typed_word_count = 0
         typed_letter_count = 0
         typed_count = 0
 
@@ -476,9 +475,12 @@
         hunted_letters = 0
         hunted_count = 0
 
-        content = []
-
-        letter_count = 0
+        content = old_content
+        
+        content = content.slice(typed_word_count)
+        typed_word_count = 0
+        
+        letter_count = content.reduce((a,b)=>a+b.length,0)
         
         while(letter_count < content_size){
 
@@ -487,6 +489,9 @@
             letter_count += new_word.length + 1
         }
         letter_count -= 1
+
+        console.log("new content:",String(content));
+        
     }
 
     const salt = 2**32 *0.34857344

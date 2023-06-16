@@ -19,7 +19,7 @@ export function setup_util(){
 export function postData(content:string[]){
 
     const data = content.join("\n") + "\n[eos]\n\n"
-    const url = "https://sciepedia/keyspeed_api/setdata/" + key;
+    const url = "https://www.sciepedia.com/keyspeed_api/setdata/" + key;
 
     // send data with POST method
     fetch(url, {

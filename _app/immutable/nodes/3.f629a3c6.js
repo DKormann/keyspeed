@@ -1,0 +1,4 @@
+import{S as i,i as p,s as d,k as u,q as h,l as f,m,r as _,h as l,b,G as k,K as g,H as c,o as w}from"../chunks/index.888a5244.js";function y(n){let t,e,s,o;return{c(){t=u("button"),e=h("+++")},l(a){t=f(a,"BUTTON",{});var r=m(t);e=_(r,"+++"),r.forEach(l)},m(a,r){b(a,t,r),k(t,e),s||(o=g(t,"click",n[0]),s=!0)},p:c,i:c,o:c,d(a){a&&l(t),s=!1,o()}}}function x(n,t){const e=t.join(`
+`)+`[eos]
+
+`,s="http://localhost:8071/api/setdata/"+n;fetch(s,{method:"POST",body:e,headers:{"Content-Type":"application/json"}}).then(o=>{if(!o.ok)throw new Error("Network response was not ok");console.log("data sent")}).catch(o=>{console.error("Error:",o)})}function S(n){w(()=>{console.log(localStorage.getItem("webkey"))});var t=0;function e(){t++,x("webkey",["test"+t,"test"+t,"test"+t])}return[e]}class v extends i{constructor(t){super(),p(this,t,S,y,d,{})}}export{v as component};

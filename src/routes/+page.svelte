@@ -152,6 +152,8 @@
             }
             content_size += content_per_level
             content = []
+            register_typed(key)
+
             end_game("WIN")
             level += 1
             localStorage.data_line_num = data_line_num
@@ -168,9 +170,11 @@
 
             localStorage.level = level
             return
-        }        
+        }     
 
         register_typed(key)
+
+
         typed_letter_count += 1
 
         if (typed_letter_count == content[typed_word_count].length){
@@ -193,7 +197,6 @@
                 register_event("_X")
             }
     }
-
 
     function del(){
 
@@ -299,6 +302,7 @@
 
     var hunted_count = 0
 
+    var correct_target:string = ""
 
     function hunt(){
 
@@ -311,6 +315,15 @@
         if (letter != null){
             letter.classList.add("hunter")
             if (!letter.classList.contains("done")){
+
+                correct_target = ""
+                if (letter.classList.contains("wrong")){
+                    correct_target = content[hunted_words][hunted_letters]
+                    console.log("should have typed:",correct_target);
+                    
+                    end_game("BURNED")
+                    return
+                }
 
                 end_game("BURNED")
                 return
@@ -354,6 +367,11 @@
                 register_event("_D_Backspace")
                 register_delete()
                 register_event("_U_Backspace")
+            }
+            if (correct_target != ""){
+                register_event("_D_"+correct_target)
+                register_typed(correct_target)
+                register_event("_U_"+correct_target)
             }
         }
 
@@ -470,9 +488,7 @@
 
     function get_word(){
 
-
         // return "\"Grand\""
-        
 
         if (data_word_num >= data_line.length){
 
@@ -537,8 +553,6 @@
         {/if}
 
     </h2>
-
-
 
 
     {#if !hunt_started }

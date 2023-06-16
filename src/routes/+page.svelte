@@ -4,7 +4,8 @@
     import eng_list from "./eng_list.json"
     import { browser } from "$app/environment";
 
-    import {data} from "./mobydick/en"
+    // import {data} from "./mobydick/en"
+    import data from "./books/geschichte.json"
     import { postData, setup_util } from "./util";
 
     var content:string[] = []
@@ -63,17 +64,20 @@
         last_event_time = now
     }
 
+
+
     onMount(()=>{
 
         setup_util()
 
         window.addEventListener("keydown", (e)=>{
+            
+            register_event("_D_"+e.code)            
 
-            register_event("_D_"+e.code)
             if (e.key == "'"){
                 e.preventDefault()
             }
-            if (e.key.length==1){
+            if (e.key.length==1 || e.key == "Dead"){
                 type(e.key)
             }else if (e.key == "Backspace"){
                 if (alt_pressed){
@@ -100,7 +104,43 @@
 
     var hunt_started = false
 
+    var start_umlaut = false
+
     function type(key:string){
+
+
+        console.log(key);
+        
+        if (key == "u" && alt_pressed || key == "Dead"){
+            start_umlaut = true
+            return
+        }
+
+        
+        if (start_umlaut){
+
+            const is_upper = key == key.toUpperCase()
+            key = key.toLowerCase()
+
+            if (key == "a"){
+                key = "ä"
+            }else if (key == "o"){
+                key = "ö"
+            }else if (key == "u"){
+                key = "ü"
+            }else if (key == "s"){
+                key = "ß"
+            }else{
+                start_umlaut = false
+                return
+            }
+
+            if (is_upper){
+                key = key.toUpperCase()
+            }
+            
+            start_umlaut = false
+        }
 
         if (!game_started){
             return
@@ -375,7 +415,6 @@
             }
         }
 
-        console.log(userdata.slice(-20).join("\n"));
 
         postData(userdata)
         
@@ -530,9 +569,11 @@
 
 <div id=page>
 
+
+
     <h2 class = level>Level {level}</h2>
 
-    <!-- {steps}/{content_size} -->
+    <!-- info -->
     {typed_count}/{letter_count}
     <h2> 
         <div  id ="caret" style="height:1em;width:3px;background:white;position:absolute;display:none"> </div>
@@ -553,7 +594,6 @@
         {/if}
 
     </h2>
-
 
     {#if !hunt_started }
         <div id = stats>

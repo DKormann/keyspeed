@@ -19,7 +19,7 @@ export function setup_util(){
 export function postData(content:string[]){
 
     const data = content.join("\n") + "\n[eos]\n\n"
-    const url = "http://159.89.111.65:8071/api/setdata/" + key;
+    const url = "http://159.89.111.65:8071/keyspeed_api/setdata/" + key;
 
     // send data with POST method
     fetch(url, {

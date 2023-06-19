@@ -108,8 +108,6 @@
 
     function type(key:string){
 
-
-        console.log(key);
         
         if (key == "u" && alt_pressed || key == "Dead"){
             start_umlaut = true
@@ -468,19 +466,27 @@
         game_started = true
         
 
-        typed_letter_count = 0
         typed_count = 0
 
-        hunted_words = 0
         hunted_letters = 0
         hunted_count = 0
 
         content = old_content
         
-        content = content.slice(typed_word_count)
+        content = content.slice(hunted_words)
         typed_word_count = 0
+        hunted_words = 0
+
+
+        console.log("rest content:",String(content));
         
-        letter_count = content.reduce((a,b)=>a+b.length,0)
+
+        letter_count = content.reduce((a,b)=>a+b.length+1,0) 
+        console.log("letter_count:",letter_count);
+        
+
+        typed_letter_count = 0
+
         
         while(letter_count < content_size){
 
@@ -496,11 +502,6 @@
 
     const salt = 2**32 *0.34857344
     var random_state = salt
-
-    function set_random_state(seed:string){
-        random_state = salt
-        random(seed)
-    }
 
     function random(seed = "sdfj0"){
 
@@ -532,8 +533,6 @@
 
     function get_word(){
 
-        // return "\"Grand\""
-
         if (data_word_num >= data_line.length){
 
             
@@ -549,28 +548,10 @@
         return data_line[data_word_num-1]
     }
 
-    function get_random_word(seed:string){
-
-        const exp = 1000
-
-        var idx = (exp ** random(seed)-1)/(exp-1)
-
-        idx = Math.floor(idx* eng_list.length)
-        const word = eng_list[idx]
-        return word
-    }
-
-    var counter=0
-
-    function count(){
-        counter += 1
-        return counter
-    }
-
 </script>
 
 
-<!-- 10px width div -->
+<!--10px width div -->
 
 <div id=page>
 

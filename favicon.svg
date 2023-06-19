@@ -5,9 +5,9 @@
 <defs>
 
     <linearGradient id="Gradient2" gradientUnits='userSpaceOnUse' x1="150" y1="400" x2="250" y2="0">
-      <stop offset="10%" stop-color= "#00f" />
-      <!-- <stop offset="50%" stop-color= "#0aa" /> -->
-      <stop offset="90%" stop-color= "#0ff" />
+      <stop offset="10%" stop-color= "#f00" />
+      <stop offset="60%" stop-color= "#cc0" />
+      <stop offset="90%" stop-color= "#0f0" />
     </linearGradient>
 
 </defs>

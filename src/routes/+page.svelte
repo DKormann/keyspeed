@@ -528,8 +528,17 @@
             
         }
     }
+
+
+    if (data_line_num >= data.length){
+                
+        data_line_num = 0
+    }
+    
     var data_line = data[data_line_num].split(" ")
 
+    console.log(data_line);
+    
 
     function get_word(){
 
@@ -538,6 +547,8 @@
             
             data_line_num += 1
             data_word_num = 0
+            console.log(data.length,data_line_num);
+            
             if (data_line_num >= data.length){
                 
                 data_line_num = 0

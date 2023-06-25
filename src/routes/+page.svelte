@@ -323,6 +323,7 @@
     var hunted_words = 0
     var hunted_letters = 0
 
+    const  hunt_timeout = 3000
 
     function start_hunt(){
 
@@ -331,7 +332,7 @@
         
         hunt_started = true
         
-        setTimeout(() => { hunt() }, 1000);
+        setTimeout(() => { hunt() }, hunt_timeout);
     }
 
     var huntid:number | null = null
@@ -367,7 +368,7 @@
                 return
             }
         }
-        var speed = 1 + (time()/1000)**0.5
+        var speed = 0. + (time()/1000)**0.5
 
         if (hunted_words < typed_word_count - 2){
             speed *=2
@@ -503,19 +504,6 @@
     const salt = 2**32 *0.34857344
     var random_state = salt
 
-    function random(seed = "sdfj0"){
-
-        for (let i = 0; i < seed.length; i++) {
-            const char = seed.charCodeAt(i);
-            random_state = ((random_state << 5) - random_state) + char;
-            random_state = random_state & random_state; // Convert to 32-bit integer
-        }
-
-        const randomNumber = Math.abs(random_state) / Math.pow(2, 32); // Divide by 2^32 to get a floating-point number between 0 and 1
-
-        return randomNumber;
-    }
-
     var data_line_num = 0
     var data_word_num = 0
     if (browser){
@@ -534,6 +522,9 @@
                 
         data_line_num = 0
     }
+
+    console.log(data.length);
+    
     
     var data_line = data[data_line_num].split(" ")
 
@@ -543,6 +534,9 @@
     function get_word(){
 
         if (data_word_num >= data_line.length){
+
+            console.log("new line");
+            
 
             
             data_line_num += 1
